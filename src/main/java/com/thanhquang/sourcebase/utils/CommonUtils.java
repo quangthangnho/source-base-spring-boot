@@ -1,6 +1,6 @@
 package com.thanhquang.sourcebase.utils;
 
-import com.thanhquang.sourcebase.services.impl.UserDetailsImpl;
+import com.thanhquang.sourcebase.services.impl.userDetail.UserDetailsImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 

@@ -1,4 +1,4 @@
-package com.thanhquang.sourcebase.services.impl;
+package com.thanhquang.sourcebase.services.impl.userDetail;
 
 import com.thanhquang.sourcebase.entities.UserEntity;
 import com.thanhquang.sourcebase.enums.user.UserStatus;

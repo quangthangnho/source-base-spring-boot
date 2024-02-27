@@ -1,7 +1,7 @@
 package com.thanhquang.sourcebase.entities.base;
 
 import com.thanhquang.sourcebase.constant.CommonConstant;
-import com.thanhquang.sourcebase.services.impl.UserDetailsImpl;
+import com.thanhquang.sourcebase.services.impl.userDetail.UserDetailsImpl;
 import com.thanhquang.sourcebase.utils.CommonUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -21,24 +21,22 @@ import java.time.ZoneOffset;
 @MappedSuperclass
 public abstract class BaseEntityAudit extends BaseEntity implements Serializable {
 
-    @Column(name = "createdBy")
+    @Column(name = "col_created_by")
     private String createdBy;
 
-    @Column(name = "updatedBy")
+    @Column(name = "col_updated_by")
     private String updatedBy;
 
-    @Column(name = "deletedBy")
+    @Column(name = "col_deleted_by")
     private String deletedBy;
 
-    @CreatedDate
-    @Column(name = "createdAt", updatable = false, columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "col_created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime createdAt;
 
-    @LastModifiedDate
-    @Column(name = "updatedAt", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "col_updated_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime updatedAt;
 
-    @Column(name = "deletedAt", columnDefinition = "TIMESTAMP WITH TIME ZONE")
+    @Column(name = "col_deleted_at", columnDefinition = "TIMESTAMP WITH TIME ZONE")
     private OffsetDateTime deletedAt;
 
     @PrePersist

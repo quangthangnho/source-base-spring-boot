@@ -2,19 +2,19 @@
 <configuration>
     <timestamp key="BY_DATE" datePattern="yyyy-MM-dd"/>
     <springProfile name="local">
-        <property resource="application-local.yml"/>
+        <property resource="application-local.properties"/>
     </springProfile>
     <springProfile name="dev">
-        <property resource="application-dev.yml"/>
+        <property resource="application-dev.properties"/>
     </springProfile>
     <springProfile name="prod">
-        <property resource="application-prod.yml"/>
+        <property resource="application-prod.properties"/>
     </springProfile>
 
     <!-- log file -->
-    <property name="LOG_PATH" value="${log.config.path}"/>
-    <property name="LOG_FILE_NAME" value="${log.config.filename}"/>
-    <property name="ERR_LOG_FILE_NAME" value="${log.config.err}"/>
+    <property name="LOG_PATH" value="${custom.log.config.path}"/>
+    <property name="LOG_FILE_NAME" value="${custom.log.config.filename}"/>
+    <property name="ERR_LOG_FILE_NAME" value="${custom.log.config.err}"/>
     <property name="LOG_PATTERN"
               value="%d{yyyyMMdd HH:mm:ss.SSS} [%thread] %-3level %logger{5} - %msg %n"/>
 

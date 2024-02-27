@@ -16,11 +16,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserEntity extends BaseEntityAudit implements Serializable {
 
-    @Column(name = "col_role", nullable = false)
+    @Column(name = "col_role", nullable = false, columnDefinition = "user_roles")
     @Enumerated(EnumType.STRING)
     private UserRoles role;
 
-    @Column(name = "col_status", nullable = false)
+    @Column(name = "col_status", nullable = false, columnDefinition = "user_status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
@@ -30,9 +30,9 @@ public class UserEntity extends BaseEntityAudit implements Serializable {
     @Column(name = "col_password", nullable = false)
     private String password;
 
-    @Column(name = "col_fullName")
+    @Column(name = "col_full_name")
     private String fullName;
 
-    @Column(name = "col_phoneNumber", unique = true)
+    @Column(name = "col_phone_number", unique = true)
     private String phoneNumber;
 }
