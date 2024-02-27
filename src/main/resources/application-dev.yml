@@ -1,0 +1,6 @@
+# log configuration
+log:
+  config:
+    path: /Users/admin/Desktop/sourcebase/logs
+    filename: info
+    err: error

@@ -1,0 +1,16 @@
+# log configuration
+log:
+  config:
+    path: /Users/admin/Desktop/sourcebase/logs
+    filename: info
+    err: error
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/source-base
+    username: postgres
+  jpa:
+    hibernate:
+      ddl-auto: none
