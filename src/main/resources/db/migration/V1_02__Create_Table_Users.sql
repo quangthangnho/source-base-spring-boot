@@ -1,6 +1,4 @@
-DROP TABLE IF EXISTS tbl_users;
 CREATE TYPE user_status AS ENUM ('ACTIVE', 'DEACTIVATED');
-CREATE TYPE user_roles AS ENUM ('USER', 'ADMIN');
 CREATE TABLE tbl_users (
                                  id SERIAL PRIMARY KEY,
                                  col_created_at TIMESTAMP(6) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP(6) NOT NULL,
@@ -9,7 +7,6 @@ CREATE TABLE tbl_users (
                                  col_updated_by TEXT,
                                  col_deleted_at TIMESTAMP(6) WITH TIME ZONE,
                                  col_deleted_by TEXT,
-                                 col_role user_roles DEFAULT 'USER' NOT NULL,
                                  col_status user_status  DEFAULT 'ACTIVE' NOT NULL,
                                  col_email TEXT unique NOT NULL,
                                  col_full_name TEXT NOT NULL,

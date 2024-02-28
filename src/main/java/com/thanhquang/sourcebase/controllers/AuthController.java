@@ -1,6 +1,8 @@
 package com.thanhquang.sourcebase.controllers;
 
-import com.thanhquang.sourcebase.dto.response.auth.RegisterDto;
+import com.thanhquang.sourcebase.dto.request.auth.LoginDto;
+import com.thanhquang.sourcebase.dto.request.auth.RegisterDto;
+import com.thanhquang.sourcebase.dto.response.user.UserDto;
 import com.thanhquang.sourcebase.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +17,13 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @GetMapping("/login")
-    public void login() {
-        // TODO
+    @PostMapping("/login")
+    public UserDto login(@Valid @RequestBody LoginDto loginDto) {
+        return authService.login(loginDto);
     }
 
     @PostMapping("/register")
-    public void register(@Valid @RequestBody RegisterDto registerDto) {
-        authService.register(registerDto);
+    public UserDto register(@Valid @RequestBody RegisterDto registerDto) {
+        return authService.register(registerDto);
     }
 }

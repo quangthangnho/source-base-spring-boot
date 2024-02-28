@@ -1,8 +1,12 @@
 package com.thanhquang.sourcebase.services;
 
-import com.thanhquang.sourcebase.dto.response.auth.RegisterDto;
+import com.thanhquang.sourcebase.dto.request.auth.LoginDto;
+import com.thanhquang.sourcebase.dto.request.auth.RegisterDto;
+import com.thanhquang.sourcebase.dto.response.user.UserDto;
 
 public interface AuthService {
 
-    void register(RegisterDto registerDto);
+    UserDto register(RegisterDto registerDto);
+
+    UserDto login(LoginDto loginDto);
 }
