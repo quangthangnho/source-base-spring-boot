@@ -1,7 +1,8 @@
 package com.thanhquang.sourcebase.config;
 
-import com.thanhquang.sourcebase.enums.user.UserRoles;
+import com.thanhquang.sourcebase.enums.user.Roles;
 import com.thanhquang.sourcebase.repositories.UserRepository;
+import com.thanhquang.sourcebase.repositories.UserRoleRepository;
 import com.thanhquang.sourcebase.services.impl.userDetail.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,8 +39,8 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(request -> request
                 .requestMatchers("/api/v1/auth/**")
                 .permitAll()
-                .requestMatchers("/api/v1/user/**").hasAnyAuthority(UserRoles.USER.name(), UserRoles.ADMIN.name())
-                .requestMatchers("/api/v1/admin/**").hasAuthority(UserRoles.ADMIN.name())
+                .requestMatchers("/api/v1/user/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
+                .requestMatchers("/api/v1/admin/**").hasAuthority(Roles.ADMIN.name())
                 .anyRequest().authenticated());
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -64,8 +65,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new UserDetailServiceImpl(userRepository);
+    public UserDetailsService userDetailsService(UserRepository userRepository, UserRoleRepository userRoleRepository) {
+        return new UserDetailServiceImpl(userRepository, userRoleRepository);
     }
 
     private static CorsConfigurationSource getConfigurationSource() {

@@ -1,6 +1,6 @@
 package com.thanhquang.sourcebase.dto.response.user;
 
-import com.thanhquang.sourcebase.enums.user.UserRoles;
+import com.thanhquang.sourcebase.enums.user.Roles;
 import com.thanhquang.sourcebase.enums.user.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +20,7 @@ public class UserDto {
     private String updatedBy;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
-    private UserRoles role;
+    private Roles role;
     private UserStatus status;
     private String email;
     private String fullName;

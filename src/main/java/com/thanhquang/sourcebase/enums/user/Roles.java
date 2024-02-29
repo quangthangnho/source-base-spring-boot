@@ -3,7 +3,7 @@ package com.thanhquang.sourcebase.enums.user;
 import lombok.Getter;
 
 @Getter
-public enum UserRoles {
+public enum Roles {
     USER,
     ADMIN;
 }

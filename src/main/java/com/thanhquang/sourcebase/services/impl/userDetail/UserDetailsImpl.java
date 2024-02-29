@@ -1,6 +1,7 @@
 package com.thanhquang.sourcebase.services.impl.userDetail;
 
 import com.thanhquang.sourcebase.entities.UserEntity;
+import com.thanhquang.sourcebase.entities.UserRoleEntity;
 import com.thanhquang.sourcebase.enums.user.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,14 +17,16 @@ import java.util.List;
 public class UserDetailsImpl implements UserDetails {
 
     private final UserEntity user;
+    private final List<UserRoleEntity> userRoles;
 
-    public UserDetailsImpl(UserEntity user) {
+    public UserDetailsImpl(UserEntity user, List<UserRoleEntity> userRoles) {
         this.user = user;
+        this.userRoles = userRoles;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
+        return userRoles.stream().map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getType().name())).toList();
     }
 
     @Override

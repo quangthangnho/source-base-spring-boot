@@ -1,7 +1,6 @@
 package com.thanhquang.sourcebase.entities;
 
 import com.thanhquang.sourcebase.entities.base.BaseEntityAudit;
-import com.thanhquang.sourcebase.enums.user.UserRoles;
 import com.thanhquang.sourcebase.enums.user.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,6 +8,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
+
 @Entity
 @Getter
 @Setter
@@ -17,11 +17,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserEntity extends BaseEntityAudit implements Serializable {
-
-    @Column(name = "col_role", nullable = false, columnDefinition = "user_roles")
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private UserRoles role;
 
     @Column(name = "col_status", nullable = false, columnDefinition = "user_status")
     @Enumerated(EnumType.STRING)
