@@ -7,6 +7,7 @@ import javax.crypto.SecretKey;
 public class CommonConstant {
 
     public static final String DEFAULT_EMAIL = "Anonymous";
+    public static final String DEFAULT_BEARER = "Bearer ";
 
     public static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
     public static final String DEFAULT_TOKEN_ISSUER = "issuer_quang";

@@ -17,10 +17,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class RoleEntity extends BaseEntity implements Serializable {
 
-    @Column(name = "col_type", nullable = false, columnDefinition = "user_roles")
-    @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private Roles type;
+    @Column(name = "col_role_name", nullable = false, unique = true)
+    private String roleName;
 
     @Column(name = "col_description")
     private String description;
