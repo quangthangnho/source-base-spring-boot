@@ -1,5 +1,6 @@
 package com.thanhquang.sourcebase.entities;
 
+import com.thanhquang.sourcebase.entities.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,14 +13,12 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserRoleEntity implements Serializable {
+public class UserRoleEntity extends BaseEntity implements Serializable {
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "col_user_id")
     private UserEntity user;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "col_role_id")
     private RoleEntity role;

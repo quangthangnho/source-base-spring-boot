@@ -1,44 +1,44 @@
 package com.thanhquang.sourcebase.config;
 
 import com.thanhquang.sourcebase.enums.user.Roles;
-import com.thanhquang.sourcebase.repositories.UserRepository;
-import com.thanhquang.sourcebase.repositories.UserRoleRepository;
 import com.thanhquang.sourcebase.services.impl.userDetail.UserDetailServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.List;
-
 @Configuration
+@EnableWebSecurity
 public class SecurityConfiguration {
 
-    private final UserDetailServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfiguration(UserDetailServiceImpl userDetailsService) {
+    public SecurityConfiguration(UserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.cors(corsConfig -> corsConfig.configurationSource(getConfigurationSource()));
+        http.cors(corsConfig -> corsConfig.configurationSource(corsConfigurationSource()));
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(request -> request
-                .requestMatchers("/api/v1/auth/**")
-                .permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/user/**").hasAnyAuthority(Roles.USER.name(), Roles.ADMIN.name())
                 .requestMatchers("/api/v1/admin/**").hasAuthority(Roles.ADMIN.name())
                 .anyRequest().authenticated());
@@ -46,9 +46,16 @@ public class SecurityConfiguration {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         http.authenticationProvider(authenticationProvider());
-
-
+        http.addFilterBefore(filter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring().requestMatchers(
+                new AntPathRequestMatcher("/resources/**"),
+                new AntPathRequestMatcher("/static/**")
+        );
     }
 
     @Bean
@@ -65,19 +72,19 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository, UserRoleRepository userRoleRepository) {
-        return new UserDetailServiceImpl(userRepository, userRoleRepository);
+    public JWTAuthenticationFilter filter() {
+        return new JWTAuthenticationFilter(userDetailsService);
     }
 
-    private static CorsConfigurationSource getConfigurationSource() {
-        var corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedMethods(List.of("*"));
-        corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000/", "http://localhost:9091"));
-        corsConfiguration.setAllowedHeaders(List.of("Content-Type"));
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
 
-        var source = new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
-
         return source;
     }
 

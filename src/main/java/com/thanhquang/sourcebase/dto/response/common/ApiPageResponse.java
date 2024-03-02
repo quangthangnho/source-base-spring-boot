@@ -1,10 +1,12 @@
 package com.thanhquang.sourcebase.dto.response.common;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiPageResponse<T> extends ApiResponse<T> {
     private int page;
     private int size;

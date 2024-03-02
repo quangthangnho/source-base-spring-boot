@@ -8,6 +8,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -34,4 +35,7 @@ public class UserEntity extends BaseEntityAudit implements Serializable {
 
     @Column(name = "col_phone_number", unique = true)
     private String phoneNumber;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<UserRoleEntity> userRoles;
 }

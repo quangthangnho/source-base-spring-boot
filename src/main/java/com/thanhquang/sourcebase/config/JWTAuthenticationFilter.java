@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
-@Component
 @RequiredArgsConstructor
 @Slf4j
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
@@ -35,6 +35,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException, ServletException {
         try {
+            logRequestHeaders(request);
             JwtUtils.getTokenFromRequest(request)
                     .filter(JwtUtils::validateToken)
                     .flatMap(JwtUtils::getEmailFromToken)
@@ -48,5 +49,22 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             log.error("Error method doFilterInternal: {}", e.getMessage());
         }
         filterChain.doFilter(request, response);
+    }
+
+
+
+    private void logRequestHeaders(HttpServletRequest request) {
+        log.info("===== Logging Request Headers START =====");
+        log.info("Request URL: {}", request.getRequestURI());
+
+        Enumeration<String> headerNames = request.getHeaderNames();
+
+        log.info("===== Request Headers =====");
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            log.info("{}: {}", headerName, headerValue);
+        }
+        log.info("=============================");
     }
 }

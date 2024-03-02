@@ -1,5 +1,6 @@
 package com.thanhquang.sourcebase.dto.response.user;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.thanhquang.sourcebase.enums.user.Roles;
 import com.thanhquang.sourcebase.enums.user.UserStatus;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.OffsetDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserDto {
 
     private Long id;
@@ -20,7 +22,6 @@ public class UserDto {
     private String updatedBy;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
-    private Roles role;
     private UserStatus status;
     private String email;
     private String fullName;

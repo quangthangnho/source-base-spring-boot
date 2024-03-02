@@ -8,6 +8,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
+import java.util.Set;
+
 @Entity
 @Getter
 @Setter
@@ -22,4 +24,7 @@ public class RoleEntity extends BaseEntity implements Serializable {
 
     @Column(name = "col_description")
     private String description;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    private Set<UserRoleEntity> userRoles;
 }

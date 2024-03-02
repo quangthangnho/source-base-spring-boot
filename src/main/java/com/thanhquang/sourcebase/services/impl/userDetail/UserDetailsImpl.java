@@ -3,6 +3,8 @@ package com.thanhquang.sourcebase.services.impl.userDetail;
 import com.thanhquang.sourcebase.entities.UserEntity;
 import com.thanhquang.sourcebase.entities.UserRoleEntity;
 import com.thanhquang.sourcebase.enums.user.UserStatus;
+import com.thanhquang.sourcebase.exceptions.BadRequestException;
+import com.thanhquang.sourcebase.exceptions.error_code.impl.UserErrors;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,16 +19,14 @@ import java.util.List;
 public class UserDetailsImpl implements UserDetails {
 
     private final UserEntity user;
-    private final List<UserRoleEntity> userRoles;
 
-    public UserDetailsImpl(UserEntity user, List<UserRoleEntity> userRoles) {
+    public UserDetailsImpl(UserEntity user) {
         this.user = user;
-        this.userRoles = userRoles;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userRoles.stream().map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getRoleName())).toList();
+        return user.getUserRoles().stream().map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getRoleName())).toList();
     }
 
     @Override
@@ -56,9 +56,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        if (user.getStatus() == UserStatus.DEACTIVATED) {
-            return false;
-        }
         return true;
     }
 }
