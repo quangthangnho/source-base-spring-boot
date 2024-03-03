@@ -55,6 +55,10 @@
         </rollingPolicy>
     </appender>
 
+<!--    <logger name="org.springframework.security" level="trace" additivity="false">-->
+<!--        <appender-ref ref="Console" />-->
+<!--    </logger>-->
+
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="INFO"/>

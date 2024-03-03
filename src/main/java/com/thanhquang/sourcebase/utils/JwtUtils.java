@@ -1,6 +1,7 @@
 package com.thanhquang.sourcebase.utils;
 
 import com.thanhquang.sourcebase.constant.CommonConstant;
+import com.thanhquang.sourcebase.dto.JwtDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
@@ -17,28 +18,38 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.thanhquang.sourcebase.constant.CommonConstant.DEFAULT_TOKEN_EXPIRATION_TIME;
-import static com.thanhquang.sourcebase.constant.CommonConstant.DEFAULT_TOKEN_ISSUER;
+import static com.thanhquang.sourcebase.constant.CommonConstant.*;
 
 @Slf4j
 public class JwtUtils {
 
+    private JwtUtils() {
+
+    }
     private static final JwtParser JWT_PARSER = Jwts.parser()
             .verifyWith(CommonConstant.SECRET_KEY)
             .build();
 
-    public static String generateToken(String email) {
+    public static JwtDto generateToken(String email, boolean isAccessToken) {
         OffsetDateTime nowOffsetDateTime = OffsetDateTime.now(ZoneOffset.UTC);
-        Instant expirationInstant = nowOffsetDateTime.plusMinutes(DEFAULT_TOKEN_EXPIRATION_TIME).toInstant();
-
-        return Jwts.builder()
+        OffsetDateTime expirationInstant;
+        if (isAccessToken) {
+            expirationInstant = nowOffsetDateTime.plusMinutes(DEFAULT_ACCESS_TOKEN_EXPIRATION_TIME);
+        } else {
+            expirationInstant = nowOffsetDateTime.plusDays(DEFAULT_REFRESH_TOKEN_EXPIRATION_TIME);
+        }
+        String token = Jwts.builder()
                 .id(UUID.randomUUID().toString())
                 .issuer(DEFAULT_TOKEN_ISSUER)
                 .subject(email)
                 .issuedAt(Date.from(nowOffsetDateTime.toInstant()))
-                .expiration(Date.from(expirationInstant))
+                .expiration(Date.from(expirationInstant.toInstant()))
                 .signWith(CommonConstant.SECRET_KEY)
                 .compact();
+        return JwtDto.builder()
+                .token(token)
+                .expiredAt(expirationInstant)
+                .build();
     }
 
     private static Optional<Claims> parseJwtToken(String jwtToken) {
@@ -52,7 +63,8 @@ public class JwtUtils {
     }
 
     public static boolean validateToken(String jwtToken) {
-        return parseJwtToken(jwtToken).isPresent();
+        Optional<Claims> claimJwts = parseJwtToken(jwtToken);
+        return claimJwts.map(claims -> claims.getExpiration().after(Date.from(OffsetDateTime.now().toInstant()))).orElse(false);
     }
 
     public static Optional<String> getEmailFromToken(String jwtToken) {

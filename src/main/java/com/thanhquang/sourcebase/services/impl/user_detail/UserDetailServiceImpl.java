@@ -1,8 +1,6 @@
-package com.thanhquang.sourcebase.services.impl.userDetail;
+package com.thanhquang.sourcebase.services.impl.user_detail;
 
 import com.thanhquang.sourcebase.entities.UserEntity;
-import com.thanhquang.sourcebase.enums.user.UserStatus;
-import com.thanhquang.sourcebase.exceptions.BadRequestException;
 import com.thanhquang.sourcebase.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

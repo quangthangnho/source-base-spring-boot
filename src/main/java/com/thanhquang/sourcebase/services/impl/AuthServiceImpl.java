@@ -11,12 +11,15 @@ import com.thanhquang.sourcebase.enums.user.Roles;
 import com.thanhquang.sourcebase.enums.user.UserStatus;
 import com.thanhquang.sourcebase.exceptions.BadRequestException;
 import com.thanhquang.sourcebase.exceptions.error_code.impl.AuthenticationErrors;
+import com.thanhquang.sourcebase.exceptions.error_code.impl.CommonErrors;
 import com.thanhquang.sourcebase.exceptions.error_code.impl.UserErrors;
 import com.thanhquang.sourcebase.mapper.AuthMapper;
 import com.thanhquang.sourcebase.mapper.UserMapper;
 import com.thanhquang.sourcebase.repositories.RoleRepository;
 import com.thanhquang.sourcebase.repositories.UserRepository;
 import com.thanhquang.sourcebase.services.AuthService;
+import com.thanhquang.sourcebase.services.RefreshTokenService;
+import com.thanhquang.sourcebase.services.UserService;
 import com.thanhquang.sourcebase.utils.JwtUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,12 +36,17 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationProvider authenticationProvider;
+    private final RefreshTokenService refreshTokenService;
 
-    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider) {
+    private final UserService userService;
+
+    public AuthServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, AuthenticationProvider authenticationProvider, RefreshTokenService refreshTokenService, UserService userService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationProvider = authenticationProvider;
+        this.refreshTokenService = refreshTokenService;
+        this.userService = userService;
     }
 
     @Transactional
@@ -64,20 +72,31 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResDto login(LoginDto loginDto) throws BadRequestException {
-        authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-        UserEntity user = userRepository.findByEmailAndDeletedAtIsNull(loginDto.getEmail())
-                .orElseThrow(() -> new BadRequestException(AuthenticationErrors.USER_NOT_FOUND));
+        try {
+            authenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+        } catch (Exception e) {
+            throw new BadRequestException(AuthenticationErrors.EMAIL_OR_PASSWORD_INVALID);
+        }
+        UserEntity user = userService.findByEmailAndDeletedAtIsNull(loginDto.getEmail());
 
         if (user.getStatus() == UserStatus.DEACTIVATED) {
             throw new BadRequestException(UserErrors.USER_DEACTIVATED);
         }
-        String accessToken = JwtUtils.generateToken(loginDto.getEmail());
-        return new JwtResDto(accessToken, "");
+        String accessToken = JwtUtils.generateToken(user.getEmail(), true).getToken();
+        return new JwtResDto(accessToken, refreshTokenService.createRefreshToken(user.getEmail()));
     }
 
-    private RoleEntity getDefaultRole() {
+    @Override
+    public JwtResDto refreshToken(String refreshToken) throws BadRequestException {
+        refreshTokenService.verifyRefreshTokenExpiration(refreshToken);
+        String accessToken = JwtUtils.generateToken(JwtUtils.getEmailFromToken(refreshToken).orElseThrow(
+                () -> new BadRequestException(AuthenticationErrors.TOKEN_INVALID)
+        ), true).getToken();
+        return new JwtResDto(accessToken, refreshToken);
+    }
+
+    private RoleEntity getDefaultRole() throws BadRequestException {
         return roleRepository.findByRoleName(Roles.USER.name()).orElseThrow(
-                // TDO: NEED throw EXCEPTION
-                () -> new RuntimeException("Default role not found"));
+                () -> new BadRequestException(AuthenticationErrors.DEFAULT_ROLE_NOT_FOUND));
     }
 }

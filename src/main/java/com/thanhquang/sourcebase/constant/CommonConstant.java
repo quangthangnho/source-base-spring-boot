@@ -12,5 +12,6 @@ public class CommonConstant {
     public static final SecretKey SECRET_KEY = Jwts.SIG.HS256.key().build();
     public static final String DEFAULT_TOKEN_ISSUER = "issuer_quang";
 
-    public static final Integer DEFAULT_TOKEN_EXPIRATION_TIME = 10;  // MINUTES
+    public static final Integer DEFAULT_ACCESS_TOKEN_EXPIRATION_TIME = 1;  // MINUTES
+    public static final Integer DEFAULT_REFRESH_TOKEN_EXPIRATION_TIME = 2;  // 2 days
 }

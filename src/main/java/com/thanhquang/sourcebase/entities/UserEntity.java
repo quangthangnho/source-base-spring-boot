@@ -36,6 +36,6 @@ public class UserEntity extends BaseEntityAudit implements Serializable {
     @Column(name = "col_phone_number", unique = true)
     private String phoneNumber;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<UserRoleEntity> userRoles;
 }

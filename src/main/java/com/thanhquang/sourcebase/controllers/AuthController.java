@@ -1,6 +1,7 @@
 package com.thanhquang.sourcebase.controllers;
 
 import com.thanhquang.sourcebase.dto.request.auth.LoginDto;
+import com.thanhquang.sourcebase.dto.request.auth.RefreshTokenDto;
 import com.thanhquang.sourcebase.dto.request.auth.RegisterDto;
 import com.thanhquang.sourcebase.dto.response.auth.JwtResDto;
 import com.thanhquang.sourcebase.dto.response.common.ApiResponse;
@@ -31,5 +32,10 @@ public class AuthController {
     @PostMapping("/register")
     public ApiResponse<UserDto> register(@Valid @RequestBody RegisterDto registerDto) throws BadRequestException {
         return ApiResponse.success(authService.register(registerDto));
+    }
+
+    @PostMapping("/refresh-token")
+    public ApiResponse<JwtResDto> refreshToken(@Valid @RequestBody RefreshTokenDto refreshTokenDto) throws BadRequestException {
+        return ApiResponse.success(authService.refreshToken(refreshTokenDto.getRefreshToken()));
     }
 }

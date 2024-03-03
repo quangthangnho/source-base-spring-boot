@@ -11,4 +11,6 @@ public interface AuthService {
     UserDto register(RegisterDto registerDto) throws BadRequestException;
 
     JwtResDto login(LoginDto loginDto) throws BadRequestException;
+
+    JwtResDto refreshToken(String refreshToken) throws BadRequestException;
 }

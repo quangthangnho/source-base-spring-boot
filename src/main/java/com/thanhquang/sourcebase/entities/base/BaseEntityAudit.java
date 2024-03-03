@@ -1,7 +1,7 @@
 package com.thanhquang.sourcebase.entities.base;
 
 import com.thanhquang.sourcebase.constant.CommonConstant;
-import com.thanhquang.sourcebase.services.impl.userDetail.UserDetailsImpl;
+import com.thanhquang.sourcebase.services.impl.user_detail.UserDetailsImpl;
 import com.thanhquang.sourcebase.utils.CommonUtils;
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
@@ -9,8 +9,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
