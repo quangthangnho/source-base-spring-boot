@@ -65,7 +65,10 @@ public class SecurityConfiguration {
         return web -> web.ignoring().requestMatchers(
                 new AntPathRequestMatcher("/resources/**"),
                 new AntPathRequestMatcher("/static/**"),
-                new AntPathRequestMatcher("/error")
+                new AntPathRequestMatcher("/error"),
+                new AntPathRequestMatcher("/api-docs/**"),
+                new AntPathRequestMatcher("/swagger-ui/**"),
+                new AntPathRequestMatcher("/swagger-resources/**")
         );
     }
 
