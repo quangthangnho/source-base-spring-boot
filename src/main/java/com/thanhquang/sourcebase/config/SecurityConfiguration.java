@@ -64,7 +64,8 @@ public class SecurityConfiguration {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring().requestMatchers(
                 new AntPathRequestMatcher("/resources/**"),
-                new AntPathRequestMatcher("/static/**")
+                new AntPathRequestMatcher("/static/**"),
+                new AntPathRequestMatcher("/error")
         );
     }
 
