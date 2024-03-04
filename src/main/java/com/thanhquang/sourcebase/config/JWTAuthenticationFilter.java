@@ -12,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -33,24 +32,19 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
      * @throws IOException if an I/O error occurs
      */
     @Override
-        protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException, ServletException {
-        try {
-            logRequestHeaders(request);
-            JwtUtils.getTokenFromRequest(request)
-                    .filter(JwtUtils::validateToken)
-                    .flatMap(JwtUtils::getEmailFromToken)
-                    .map(userDetailsService::loadUserByUsername)
-                    .map(userDetails -> new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()))
-                    .ifPresent(authenticationToken -> {
-                        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                    });
-        } catch (Exception e) {
-            log.error("Error method doFilterInternal: {}", e.getMessage());
-        }
+    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws IOException, ServletException {
+        logRequestHeaders(request);
+        JwtUtils.getTokenFromRequest(request)
+                .filter(JwtUtils::validateToken)
+                .flatMap(JwtUtils::getEmailFromToken)
+                .map(userDetailsService::loadUserByUsername)
+                .map(userDetails -> new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities()))
+                .ifPresent(authenticationToken -> {
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                });
         filterChain.doFilter(request, response);
     }
-
 
 
     private void logRequestHeaders(HttpServletRequest request) {
